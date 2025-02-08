@@ -17,4 +17,10 @@ resource "aws_dynamodb_table" "url_shortener_table" {
     attribute_name = "expiration_time"
     enabled = true
   }
+
+  global_secondary_index {
+    name            = "long_url-index"
+    hash_key        = "long_url"
+    projection_type = "ALL"
+  }
 }
