@@ -5,7 +5,7 @@ import { LongUrlRetrieveComponent } from './long-url-retrieve/long-url-retrieve.
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, ShortenUrlComponent, LongUrlRetrieveComponent],
+  imports: [ ShortenUrlComponent, LongUrlRetrieveComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })

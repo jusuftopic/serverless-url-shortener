@@ -1,12 +1,13 @@
 import { Component } from '@angular/core';
 import { MatToolbar } from '@angular/material/toolbar';
 import { MatCard } from '@angular/material/card';
-import { MatFormField } from '@angular/material/form-field';
+import { MatFormField, MatLabel } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { FormsModule } from '@angular/forms';
 import { MatButton } from '@angular/material/button';
 import { NgIf } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-long-url-retrieve',
@@ -17,7 +18,9 @@ import { HttpClient } from '@angular/common/http';
     MatInput,
     FormsModule,
     MatButton,
-    NgIf
+    NgIf,
+    MatLabel,
+    HttpClientModule
   ],
   templateUrl: './long-url-retrieve.component.html',
   styleUrl: './long-url-retrieve.component.scss'
