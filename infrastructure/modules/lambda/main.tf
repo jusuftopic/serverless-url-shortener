@@ -82,3 +82,20 @@ resource "aws_lambda_function" "long_url_lambda" {
     }
   }
 }
+
+# API Gateway Permissions for Lambda
+resource "aws_lambda_permission" "apigw_shorten_url" {
+  statement_id  = "AllowAPIGatewayInvokeShorten"
+  action        = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.shorten_url_lambda.function_name
+  principal     = "apigateway.amazonaws.com"
+  source_arn    = "${var.url_shortener_api_execution_arn}/*/*"
+}
+
+resource "aws_lambda_permission" "apigw_get_long_url" {
+  statement_id  = "AllowAPIGatewayInvokeGetLong"
+  action        = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.long_url_lambda.function_name
+  principal     = "apigateway.amazonaws.com"
+  source_arn    = "${var.url_shortener_api_execution_arn}/*/*"
+}

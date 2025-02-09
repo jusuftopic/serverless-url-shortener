@@ -1,0 +1,21 @@
+.shorten-url-card {
+  max-width: 600px;
+  margin: 20px auto;
+}
+
+.form-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 20px 0;
+}
+
+.result-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+button {
+  align-self: flex-start;
+}

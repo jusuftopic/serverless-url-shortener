@@ -1,0 +1,22 @@
+<mat-card class="shorten-url-card">
+  <mat-toolbar color="primary">
+    <span>URL Shortener</span>
+  </mat-toolbar>
+
+  <div class="form-container">
+    <mat-form-field appearance="fill">
+      <mat-label>Enter URL to Shorten</mat-label>
+      <input matInput [(ngModel)]="urlToShorten" placeholder="https://example.com" />
+    </mat-form-field>
+
+    <button mat-raised-button color="primary" (click)="shortenUrl()">Shorten</button>
+  </div>
+
+  <div *ngIf="shortenedUrl" class="result-container">
+    <mat-form-field appearance="fill">
+      <mat-label>Shortened URL</mat-label>
+      <input matInput [value]="shortenedUrl" readonly />
+    </mat-form-field>
+    <button mat-raised-button color="accent" (click)="copyToClipboard()">Copy to Clipboard</button>
+  </div>
+</mat-card>

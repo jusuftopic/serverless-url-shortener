@@ -1,0 +1,21 @@
+<mat-card class="get-long-url-card">
+  <mat-toolbar color="primary">
+    <span>Retrieve Long URL</span>
+  </mat-toolbar>
+
+  <div class="form-container">
+    <mat-form-field appearance="fill">
+      <mat-label>Enter Shortened URL</mat-label>
+      <input matInput [(ngModel)]="shortUrl" placeholder="abc123" />
+    </mat-form-field>
+
+    <button mat-raised-button color="primary" (click)="getLongUrl()">Retrieve</button>
+  </div>
+
+  <div *ngIf="longUrl" class="result-container">
+    <mat-form-field appearance="fill">
+      <mat-label>Long URL</mat-label>
+      <input matInput [value]="longUrl" readonly />
+    </mat-form-field>
+  </div>
+</mat-card>
