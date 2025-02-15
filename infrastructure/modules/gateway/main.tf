@@ -1,17 +1,26 @@
-terraform {
-  required_providers {
-    aws = {
-      source  = "hashicorp/aws"
-      version = "5.81.0"
-    }
-  }
-}
+
 # REST API
 resource "aws_api_gateway_rest_api" "url_shortener_api" {
   name = "UrlShortenerAPI"
 
   endpoint_configuration {
     types = ["REGIONAL"]
+  }
+}
+
+# USAGE PLAN
+resource "aws_api_gateway_usage_plan" "shortener_usage_plan" {
+  name        = "url-shortener-usage-plan"
+  description = "Throttling limits for URL Shortener API"
+
+  throttle_settings {
+    rate_limit  = 10    # Max 10 requests per second
+    burst_limit = 20    # Allow up to 20 requests concurrent
+  }
+
+  api_stages {
+    api_id = aws_api_gateway_rest_api.url_shortener_api.id
+    stage  = aws_api_gateway_stage.url_shortener_stage.stage_name
   }
 }
 
@@ -36,6 +45,7 @@ resource "aws_api_gateway_method" "shorten_url" {
   resource_id   = aws_api_gateway_resource.url_shortener_api_resource.id
   rest_api_id   = aws_api_gateway_rest_api.url_shortener_api.id
 }
+
 
 # REST API get_long_url METHOD
 resource "aws_api_gateway_method" "get_long_url" {
