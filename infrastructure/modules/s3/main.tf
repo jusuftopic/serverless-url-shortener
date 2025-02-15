@@ -14,8 +14,7 @@ resource "aws_s3_bucket_website_configuration" "angular_app_hosting" {
   }
 }
 
-
-#CLOUDFRONT OAC
+# CLOUDFRONT OAC
 resource "aws_cloudfront_origin_access_control" "oac" {
   name                              = "url-shortener-ui-${var.environment}-oac"
   description                       = "OAC for accessing S3"
@@ -24,7 +23,7 @@ resource "aws_cloudfront_origin_access_control" "oac" {
   signing_protocol                  = "sigv4"
 }
 
-# CloudFront Distribution
+# CLOUDFRONT DISTRIBUTION
 resource "aws_cloudfront_distribution" "angular_cdn" {
   origin {
     domain_name              = aws_s3_bucket.angular_app.bucket_regional_domain_name
@@ -54,6 +53,13 @@ resource "aws_cloudfront_distribution" "angular_cdn" {
   # Use a free CloudFront SSL certificate
   viewer_certificate {
     cloudfront_default_certificate = true
+  }
+
+  # No geo restrictions
+  restrictions {
+    geo_restriction {
+      restriction_type = "none"
+    }
   }
 }
 

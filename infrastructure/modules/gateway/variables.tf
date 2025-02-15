@@ -14,7 +14,12 @@ variable "environment" {
   default = "prod"
 }
 
-variable "url_shortener_api_execution_arn" {
-  description = "URL shortener REST API execution ARN"
+variable "shorten_url_lambda_function_name" {
+  description = "Lambda function name for handling shorten url"
+  type = string
+}
+
+variable "long_url_lambda_function_name" {
+  description = "Lambda function name for handling shorten url"
   type = string
 }

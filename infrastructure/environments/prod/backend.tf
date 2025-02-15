@@ -1,18 +1,21 @@
 terraform {
+  backend "s3" {
+    bucket = "url-shortener-terraform-state-remote"
+    key = "url-shortener-terraform-state-remote/terraform.tfstate"
+    region = "eu-central-1"
+    dynamodb_table = "shortener_terraform_state_locks"
+    encrypt = true
+  }
   required_providers {
     aws = {
       source  = "hashicorp/aws"
       version = "~> 5.0"
     }
-    awscc = {
-      source  = "hashicorp/awscc"
-      version = "1.23.0"
-    }
   }
 }
 
 resource "aws_s3_bucket" "shortener_terraform_state" {
-  bucket = "url-shortener-terraform-state"
+  bucket = "url-shortener-terraform-state-remote"
   force_destroy = true
 
   lifecycle {

@@ -1,4 +1,3 @@
-
 # REST API
 resource "aws_api_gateway_rest_api" "url_shortener_api" {
   name = "UrlShortenerAPI"
@@ -10,7 +9,7 @@ resource "aws_api_gateway_rest_api" "url_shortener_api" {
 
 # USAGE PLAN
 resource "aws_api_gateway_usage_plan" "shortener_usage_plan" {
-  name        = "url-shortener-usage-plan"
+  name        = "url-shortener-usage-plan-${var.environment}"
   description = "Throttling limits for URL Shortener API"
 
   throttle_settings {
@@ -27,8 +26,8 @@ resource "aws_api_gateway_usage_plan" "shortener_usage_plan" {
 # RESOURCE FOR SHORTENING URL
 resource "aws_api_gateway_resource" "url_shortener_api_resource" {
   parent_id   = aws_api_gateway_rest_api.url_shortener_api.root_resource_id
-  path_part   = "url-shortener"
   rest_api_id = aws_api_gateway_rest_api.url_shortener_api.id
+  path_part   = "url-shortener"
 }
 
 # RESOURCE FOR RETRIEVING long URL
@@ -94,4 +93,21 @@ resource "aws_api_gateway_stage" "url_shortener_stage" {
   rest_api_id   = aws_api_gateway_rest_api.url_shortener_api.id
   stage_name    = var.environment
   deployment_id = aws_api_gateway_deployment.url_shortener_deployment.id
+}
+
+# API Gateway Permissions for Lambda
+resource "aws_lambda_permission" "apigw_shorten_url" {
+  statement_id  = "AllowAPIGatewayInvokeShorten"
+  action        = "lambda:InvokeFunction"
+  function_name = var.shorten_url_lambda_function_name
+  principal     = "apigateway.amazonaws.com"
+  source_arn    = "${aws_api_gateway_rest_api.url_shortener_api.execution_arn}/*/*"
+}
+
+resource "aws_lambda_permission" "apigw_get_long_url" {
+  statement_id  = "AllowAPIGatewayInvokeGetLong"
+  action        = "lambda:InvokeFunction"
+  function_name = var.long_url_lambda_function_name
+  principal     = "apigateway.amazonaws.com"
+  source_arn    = "${aws_api_gateway_rest_api.url_shortener_api.execution_arn}/*/*"
 }

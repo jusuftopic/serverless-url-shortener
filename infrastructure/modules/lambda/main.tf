@@ -43,7 +43,7 @@ resource "aws_iam_role_policy_attachment" "lambda_policy_attachment" {
 
 # LAMBDA FUNCTIONS ARCHIVE FILE
 data "archive_file" "url_shortener_lambda_zip" {
-  source_file = "${path.module}/../../backend"
+  source_dir = "${path.module}/../../../backend"
   output_path = "url_shortener_lambda.zip"
   type        = "zip"
 }
@@ -81,21 +81,4 @@ resource "aws_lambda_function" "long_url_lambda" {
       DYNAMODB_TABLE = var.url_shortener_table_name
     }
   }
-}
-
-# API Gateway Permissions for Lambda
-resource "aws_lambda_permission" "apigw_shorten_url" {
-  statement_id  = "AllowAPIGatewayInvokeShorten"
-  action        = "lambda:InvokeFunction"
-  function_name = aws_lambda_function.shorten_url_lambda.function_name
-  principal     = "apigateway.amazonaws.com"
-  source_arn    = "${var.url_shortener_api_execution_arn}/*/*"
-}
-
-resource "aws_lambda_permission" "apigw_get_long_url" {
-  statement_id  = "AllowAPIGatewayInvokeGetLong"
-  action        = "lambda:InvokeFunction"
-  function_name = aws_lambda_function.long_url_lambda.function_name
-  principal     = "apigateway.amazonaws.com"
-  source_arn    = "${var.url_shortener_api_execution_arn}/*/*"
 }
