@@ -64,6 +64,8 @@ resource "aws_lambda_function" "shorten_url_lambda" {
       DYNAMODB_TABLE = var.url_shortener_table_name
     }
   }
+
+  depends_on = [aws_iam_role_policy_attachment.lambda_policy_attachment]
 }
 
 resource "aws_lambda_function" "long_url_lambda" {
@@ -81,4 +83,35 @@ resource "aws_lambda_function" "long_url_lambda" {
       DYNAMODB_TABLE = var.url_shortener_table_name
     }
   }
+
+    depends_on = [aws_iam_role_policy_attachment.lambda_policy_attachment]
+}
+
+# ENABLE LOGGING FOR LAMBDA FUNCTIONS
+resource "aws_cloudwatch_log_group" "shorten_url_lambda_log_group" {
+  name              = "/aws/lambda/shorten_url_lambda_${var.environment}"
+  retention_in_days = 1
+}
+
+#add IAM policy for CloudWatch logs
+resource "aws_iam_policy" "lambda_cloudwatch_policy" {
+  name        = "lambda_cloudwatch_policy_${var.environment}"
+  description = "Policy for Lambda to write logs to CloudWatch"
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action   = ["logs:CreateLogGroup", "logs:CreateLogStream", "logs:PutLogEvents"]
+        Effect   = "Allow"
+        Resource = "${aws_cloudwatch_log_group.shorten_url_lambda_log_group.arn}:*"
+      },
+    ]
+  })
+}
+
+# Attach the policy to the role
+resource "aws_iam_role_policy_attachment" "lambda_cloudwatch_policy_attachment" {
+  role       = aws_iam_role.lambda_role.name
+  policy_arn = aws_iam_policy.lambda_cloudwatch_policy.arn
 }

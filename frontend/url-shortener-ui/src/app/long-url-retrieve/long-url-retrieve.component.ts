@@ -8,6 +8,7 @@ import { MatButton } from '@angular/material/button';
 import { NgIf } from '@angular/common';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-long-url-retrieve',
@@ -38,15 +39,10 @@ export class LongUrlRetrieveComponent {
       return;
     }
 
-    this.http
-      .get<{ longUrl: string }>(`https://your-api-url/long_url/${this.shortUrl}`)
-      .subscribe(
-        (response) => {
-          this.longUrl = response.longUrl;
-        },
-        (error) => {
-          this.snackBar.open('Failed to retrieve long URL', 'Close', { duration: 3000 });
-        }
-      );
+    this.http.get<{ long_url: string }>(environment.backendBaseUrl + `/${this.shortUrl}`)
+      .subscribe({
+        next: (response) => this.longUrl = response.long_url,
+        error: () => this.snackBar.open('Failed to retrieve long URL', 'Close', { duration: 3000 })
+      });
   }
 }

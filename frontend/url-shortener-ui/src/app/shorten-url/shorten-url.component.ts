@@ -8,6 +8,7 @@ import { NgIf } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-shorten-url',
@@ -37,16 +38,11 @@ export class ShortenUrlComponent {
       return;
     }
 
-    this.http
-      .post<{ shortUrl: string }>('https://your-api-url/shorten', { url: this.urlToShorten })
-      .subscribe(
-        (response) => {
-          this.shortenedUrl = response.shortUrl;
-        },
-        (error) => {
-          this.snackBar.open('Failed to shorten URL', 'Close', { duration: 3000 });
-        }
-      );
+    this.http.post<{ short_url: string }>(environment.backendBaseUrl + "/url-shortener", { long_url: this.urlToShorten })
+      .subscribe({
+        next: (response) => this.shortenedUrl = response.short_url,
+        error: () => this.snackBar.open('Failed to shorten URL', 'Close', { duration: 3000 })
+      });
   }
 
   copyToClipboard() {
